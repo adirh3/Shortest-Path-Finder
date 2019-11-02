@@ -11,6 +11,7 @@ using ShortestPathFinder.Common.Graph;
 using ShortestPathFinder.Common.Performance;
 using ShortestPathFinder.Graphs.Http;
 using ShortestPathFinder.Graphs.Wikipedia;
+using ShortestPathFinder.Graphs.Wikipedia.Objects;
 using ShortestPathFinder.Logics.Performance;
 
 namespace ShortestPathFinder
