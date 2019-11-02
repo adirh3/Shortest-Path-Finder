@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Dasync.Collections;
 using Microsoft.Extensions.Logging;
 using ShortestPathFinder.Common.Algorithm;
+using ShortestPathFinder.Common.Configuration;
 using ShortestPathFinder.Common.Graph;
-using Dasync.Collections;
-
 
 namespace ShortestPathFinder.Algorithm.ParallelCrawl
 {
@@ -23,13 +23,16 @@ namespace ShortestPathFinder.Algorithm.ParallelCrawl
         private IList<Node> _currentResult;
         private readonly object _currentMinListLock = new object();
         private readonly ConcurrentDictionary<T, int> _nodeResults;
+        private readonly int _maxDegreeOfParallelism;
 
         public ParallelCrawlingAlgorithm(ILogger<ParallelCrawlingAlgorithm<T>> logger,
-            IRelationsFinder<T> relationsFinder)
+            IRelationsFinder<T> relationsFinder, ParallelConfiguration parallelConfiguration = null)
         {
             _logger = logger;
             _relationsFinder = relationsFinder;
             _nodeResults = new ConcurrentDictionary<T, int>();
+            parallelConfiguration ??= new ParallelConfiguration();
+            _maxDegreeOfParallelism = parallelConfiguration.MaxParallelism;
         }
 
         /// <summary>
@@ -40,7 +43,7 @@ namespace ShortestPathFinder.Algorithm.ParallelCrawl
         /// <returns>An enumeration of the <b>shortest</b> path between the source and the destination</returns>
         public IEnumerable<Node> CalculatePath(Node source, Node destination)
         {
-            throw new NotImplementedException();
+            return CalculatePathAsync(source, destination).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -53,23 +56,42 @@ namespace ShortestPathFinder.Algorithm.ParallelCrawl
         {
             _logger.LogInformation(
                 $"Started Parallel Crawling algorithm to find the shortest path between {source} and {destination}");
+
+            // Cast both nodes to the dest node
             var sourceNode = source as T;
             var destNode = destination as T;
+            if (sourceNode == null || destination == null)
+            {
+                throw new InvalidCastException("Source node and destination nodes are not of the same type!");
+            }
+
+            // Add source to the lists
             var results = new List<Node> {sourceNode};
             _nodeResults.TryAdd(sourceNode, 0);
-            IEnumerable<T> sourceRelations = await _relationsFinder.FindRelationsAsync(sourceNode);
+
+            // Get all relations of source
+            var sourceRelations = await _relationsFinder.FindRelationsAsync(sourceNode);
+
+            // Check if dest is within 1 hop to reduce runtime
             if (sourceRelations.Contains(destNode))
             {
                 results.Add(destNode);
-                return results;
+                return results; // Destination is within 1 hop, no need to keep going
             }
-            
+
+            // Run asynchronously in parallel will improve performance  
             await sourceRelations.ParallelForEachAsync(
                 async currNode => { await HandleNode(results, currNode, destNode); },
-                8, CancellationToken.None);
+                _maxDegreeOfParallelism, CancellationToken.None);
             return _currentResult;
         }
 
+        /// <summary>
+        /// Handles each node in recursive manner
+        /// </summary>
+        /// <param name="results">The current results of the node</param>
+        /// <param name="currNode">The current node</param>
+        /// <param name="destNode">The destination node</param>
         private async Task HandleNode(IEnumerable<Node> results, T currNode, T destNode)
         {
             var currList = results.ToList();
