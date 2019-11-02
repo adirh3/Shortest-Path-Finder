@@ -18,6 +18,7 @@ namespace ShortestPathFinder.Graphs.Wikipedia.Utils
         private const string QueryPropertyName = "query";
         private const string PagesPropertyName = "pages";
         private const string TitlePropertyName = "title";
+        private const string LinksPropertyName = "links";
 
         #endregion
 
@@ -66,12 +67,17 @@ namespace ShortestPathFinder.Graphs.Wikipedia.Utils
             if (rootElement.TryGetProperty(QueryPropertyName, out var query) &&
                 query.TryGetProperty(PagesPropertyName, out var pages))
             {
-                var links = pages.EnumerateArray();
-                foreach (var linkElement in links)
+                var article = pages.EnumerateObject();
+                article.MoveNext(); // Move to the first article
+                if (article.Current.Value.TryGetProperty(LinksPropertyName, out var linksElement))
                 {
-                    if (linkElement.TryGetProperty(TitlePropertyName, out var title))
+                    var links = linksElement.EnumerateArray();
+                    foreach (var linkElement in links)
                     {
-                        result.Links.Add(new WikipediaNode(title.GetString()));
+                        if (linkElement.TryGetProperty(TitlePropertyName, out var title))
+                        {
+                            result.Links.Add(new WikipediaNode(title.GetString()));
+                        }
                     }
                 }
             }
