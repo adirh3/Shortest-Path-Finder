@@ -18,12 +18,12 @@ namespace ShortestPathFinder.Graphs.Wikipedia.Utils
         {
             var lastIndexOf = nodeString.LastIndexOf(@"/", StringComparison.Ordinal);
             var articleName = nodeString;
-            if (lastIndexOf != -1)
+            if (lastIndexOf != -1 && lastIndexOf != nodeString.Length - 1)
             {
-                articleName = articleName.Substring(lastIndexOf);
+                articleName = articleName.Substring(lastIndexOf + 1);
             }
 
-            return new WikipediaNode(articleName);
+            return new WikipediaNode(articleName.Replace("_", " "));
         }
     }
 }
