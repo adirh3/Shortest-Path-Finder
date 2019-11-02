@@ -37,16 +37,19 @@ namespace ShortestPathFinder.Graphs.Wikipedia
         /// </summary>
         /// <param name="node">Wikipedia article</param>
         /// <returns>All the referenced articles</returns>
-        public IEnumerable<WikipediaNode> FindRelations(WikipediaNode node)
+        public IList<WikipediaNode> FindRelations(WikipediaNode node)
         {
             WikipediaApiResult wikipediaApiResult;
+            var results = new List<WikipediaNode>();
             do
             {
-                var result = GetWikipediaLinks(node.DisplayName);
+                var apiResultStream = GetWikipediaLinks(node.DisplayName);
                 // Parse from HTTP stream
-                wikipediaApiResult = WikipediaApiResultParser.ParseFromStream(result);
-                foreach (var wikipediaNode in EnumerateFilteredResultLinks(wikipediaApiResult)) yield return wikipediaNode;
+                wikipediaApiResult = WikipediaApiResultParser.ParseFromStream(apiResultStream);
+                EnumerateFilteredResultLinks(wikipediaApiResult, results);
             } while (wikipediaApiResult.Continue);
+
+            return results;
         }
 
         /// <summary>
@@ -54,33 +57,35 @@ namespace ShortestPathFinder.Graphs.Wikipedia
         /// </summary>
         /// <param name="node">Wikipedia article</param>
         /// <returns>All the referenced articles</returns>
-        public async IAsyncEnumerable<WikipediaNode> FindRelationsAsync(WikipediaNode node)
+        public async Task<IList<WikipediaNode>> FindRelationsAsync(WikipediaNode node)
         {
             WikipediaApiResult wikipediaApiResult;
+            var results = new List<WikipediaNode>();
             do
             {
-                var getLinks = GetWikipediaLinksAsync(node.DisplayName);
+                var getApiResultStream = GetWikipediaLinksAsync(node.DisplayName);
                 // Parse from HTTP stream
-                wikipediaApiResult = await WikipediaApiResultParser.ParseFromStreamAsync(await getLinks);
-                foreach (var wikipediaNode in EnumerateFilteredResultLinks(wikipediaApiResult)) yield return wikipediaNode;
+                wikipediaApiResult = await WikipediaApiResultParser.ParseFromStreamAsync(await getApiResultStream);
+                EnumerateFilteredResultLinks(wikipediaApiResult, results);
             } while (wikipediaApiResult.Continue);
+
+            return results;
         }
-        
+
         /// <summary>
         /// Enumerates through the wikipedia api result links and filters them
         /// </summary>
         /// <param name="wikipediaApiResult"></param>
+        /// <param name="results"></param>
         /// <returns></returns>
-        private IEnumerable<WikipediaNode> EnumerateFilteredResultLinks(WikipediaApiResult wikipediaApiResult)
+        private void EnumerateFilteredResultLinks(WikipediaApiResult wikipediaApiResult,
+            List<WikipediaNode> results)
         {
-            foreach (var wikipediaNode in wikipediaApiResult.Links)
-            {
-                // Filter not needed articles
-                var keep = _nodeFilters.Aggregate(true,
-                    (current, nodeFilter) => current && nodeFilter.Filter(wikipediaNode));
-                if (keep)
-                    yield return wikipediaNode;
-            }
+            results.AddRange(from wikipediaNode in wikipediaApiResult.Links
+                let keep = _nodeFilters.Aggregate(true,
+                    (current, nodeFilter) => current && nodeFilter.Filter(wikipediaNode))
+                where keep
+                select wikipediaNode);
         }
 
         /// <summary>
