@@ -39,9 +39,10 @@ namespace ShortestPathFinder.Logics.Performance
         public async Task<T> ThrottleAsync<T>(Func<Task<T>> function)
         {
             await _semaphore.WaitAsync();
-            var result = await function.Invoke();
-            await Task.Delay(_configuration.DelayBetweenIterations);
-            return result;
+            var result = function.Invoke();
+            // Add delay after completion
+            var _ = result.ContinueWith(async t => await Task.Delay(_configuration.DelayBetweenIterations)); 
+            return await result;
         }
     }
 }
