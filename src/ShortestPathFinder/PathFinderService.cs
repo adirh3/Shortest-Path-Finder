@@ -56,7 +56,6 @@ namespace ShortestPathFinder
         public async Task StopAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("The service finished running");
-            Environment.Exit(-1);
         }
     }
 }
