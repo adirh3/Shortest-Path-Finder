@@ -12,9 +12,9 @@ namespace ShortestPathFinder.Logics.Performance
     {
         private readonly CountTimeBasedThrottlerConfiguration _configuration;
 
-        public CountTimeBasedThrottler(CountTimeBasedThrottlerConfiguration configuration)
+        public CountTimeBasedThrottler(CountTimeBasedThrottlerConfiguration configuration = null)
         {
-            _configuration = configuration;
+            _configuration = configuration ?? new CountTimeBasedThrottlerConfiguration();
         }
 
         public T Throttle(Func<T> function)

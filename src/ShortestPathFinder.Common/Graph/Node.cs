@@ -11,6 +11,14 @@ namespace ShortestPathFinder.Common.Graph
         public string DisplayName { get; }
 
         /// <summary>
+        /// Creates new instance of the Node
+        /// </summary>
+        public Node(string displayName)
+        {
+            DisplayName = displayName;
+        }
+
+        /// <summary>
         /// Making sure whoever use this will calculate it's hashcode
         /// </summary>
         /// <returns></returns>

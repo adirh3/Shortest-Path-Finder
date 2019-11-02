@@ -12,6 +12,13 @@ namespace ShortestPathFinder.Algorithm.ParallelCrawl
     /// <typeparam name="T">The node type</typeparam>
     public class ParallelCrawlingAlgorithm<T> : IPathFinderAlgorithm<T> where T : Node
     {
+        private readonly IRelationsFinder<T> _relationsFinder;
+
+        public ParallelCrawlingAlgorithm(IRelationsFinder<T> relationsFinder)
+        {
+            _relationsFinder = relationsFinder;
+        }
+
         /// <summary>
         /// Finds the <b>shortest</b> path between the source and destination by crawling in parallel
         /// </summary>

@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 namespace ShortestPathFinder.Common.Performance
 {
     /// <summary>
-    /// Throttle interface to throttle specific function by type 
+    /// Throttle the cpu by delaying a fucntion
     /// </summary>
-    public interface IThrottler<T>
+    public interface IThrottler<T> 
     {
         /// <summary>
         /// Throttles the specified function

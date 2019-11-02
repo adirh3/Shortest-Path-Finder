@@ -8,7 +8,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortestPathFinder.Logics",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortestPathFinder.Algorithms.BFS", "ShortestPathFinder.Algorithms.BFS\ShortestPathFinder.Algorithms.BFS.csproj", "{44291072-4269-48F8-BCD0-B43A5EDF4E0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortestPathFinder.Algorithm.ParallelCrawl", "ShortestPathFinder.Algorithm.ParallelCrawl\ShortestPathFinder.Algorithm.ParallelCrawl.csproj", "{A4745531-D974-4059-AF91-B601B288CFAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortestPathFinder.Algorithms.ParallelCrawl", "ShortestPathFinder.Algorithms.ParallelCrawl\ShortestPathFinder.Algorithms.ParallelCrawl.csproj", "{A4745531-D974-4059-AF91-B601B288CFAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortestPathFinder.Graphs.Http", "ShortestPathFinder.Graphs.Http\ShortestPathFinder.Graphs.Http.csproj", "{C3239DA9-D8D2-43C9-B125-23F37423A207}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortestPathFinder.Graphs.Wikipedia", "ShortestPathFinder.Graphs.Wikipedia\ShortestPathFinder.Graphs.Wikipedia.csproj", "{B078C766-B8F5-44BE-A2F4-F79EC4E36D4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,5 +40,13 @@ Global
 		{A4745531-D974-4059-AF91-B601B288CFAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4745531-D974-4059-AF91-B601B288CFAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4745531-D974-4059-AF91-B601B288CFAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3239DA9-D8D2-43C9-B125-23F37423A207}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3239DA9-D8D2-43C9-B125-23F37423A207}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3239DA9-D8D2-43C9-B125-23F37423A207}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3239DA9-D8D2-43C9-B125-23F37423A207}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B078C766-B8F5-44BE-A2F4-F79EC4E36D4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B078C766-B8F5-44BE-A2F4-F79EC4E36D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B078C766-B8F5-44BE-A2F4-F79EC4E36D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B078C766-B8F5-44BE-A2F4-F79EC4E36D4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
