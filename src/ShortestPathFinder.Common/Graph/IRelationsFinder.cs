@@ -5,6 +5,7 @@ namespace ShortestPathFinder.Common.Graph
 {
     /// <summary>
     /// Interface for relation finder - finds all the relations of a node
+    /// Note: We return IList because every algorithm will enumerate the result more than once 
     /// </summary>
     public interface IRelationsFinder<T> where T : Node
     {
@@ -13,13 +14,13 @@ namespace ShortestPathFinder.Common.Graph
         /// </summary>
         /// <param name="node">The specified node</param>
         /// <returns>Enumeration of the relations of the specified node</returns>
-        IEnumerable<T> FindRelations(T node);
+        IList<T> FindRelations(T node);
 
         /// <summary>
         /// Asynchronously finds all the relations (1-hop) of the specified node
         /// </summary>
         /// <param name="node">The specified node</param>
         /// <returns>Enumeration of the relations of the specified node</returns>
-        Task<IEnumerable<T>> FindRelationsAsync(T node);
+        Task<IList<T>> FindRelationsAsync(T node);
     }
 }
