@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortestPathFinder.Common",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortestPathFinder.Logics", "ShortestPathFinder.Logics\ShortestPathFinder.Logics.csproj", "{AAB11B0B-F913-4B49-BF29-F5A23D28CAD0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortestPathFinder.Algorithms.BFS", "ShortestPathFinder.Algorithms.BFS\ShortestPathFinder.Algorithms.BFS.csproj", "{44291072-4269-48F8-BCD0-B43A5EDF4E0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortestPathFinder.Algorithm.ParallelCrawl", "ShortestPathFinder.Algorithm.ParallelCrawl\ShortestPathFinder.Algorithm.ParallelCrawl.csproj", "{A4745531-D974-4059-AF91-B601B288CFAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +28,13 @@ Global
 		{AAB11B0B-F913-4B49-BF29-F5A23D28CAD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAB11B0B-F913-4B49-BF29-F5A23D28CAD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAB11B0B-F913-4B49-BF29-F5A23D28CAD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44291072-4269-48F8-BCD0-B43A5EDF4E0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44291072-4269-48F8-BCD0-B43A5EDF4E0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44291072-4269-48F8-BCD0-B43A5EDF4E0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44291072-4269-48F8-BCD0-B43A5EDF4E0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4745531-D974-4059-AF91-B601B288CFAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4745531-D974-4059-AF91-B601B288CFAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4745531-D974-4059-AF91-B601B288CFAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4745531-D974-4059-AF91-B601B288CFAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

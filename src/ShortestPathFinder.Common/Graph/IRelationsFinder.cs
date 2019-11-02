@@ -3,10 +3,23 @@ using System.Threading.Tasks;
 
 namespace ShortestPathFinder.Common.Graph
 {
-    public interface IRelationsFinder
+    /// <summary>
+    /// Interface for relation finder - finds all the relations of a node
+    /// </summary>
+    public interface IRelationsFinder<T> where T : Node
     {
-        IEnumerable<Node> FindRelations(Node node);
-        
-        Task<IEnumerable<Node>> FindRelationsAsync(Node node);
+        /// <summary>
+        /// Finds all the relations (1-hop) of the specified node
+        /// </summary>
+        /// <param name="node">The specified node</param>
+        /// <returns>Enumeration of the relations of the specified node</returns>
+        IEnumerable<T> FindRelations(T node);
+
+        /// <summary>
+        /// Asynchronously finds all the relations (1-hop) of the specified node
+        /// </summary>
+        /// <param name="node">The specified node</param>
+        /// <returns>Enumeration of the relations of the specified node</returns>
+        Task<IEnumerable<T>> FindRelationsAsync(T node);
     }
 }

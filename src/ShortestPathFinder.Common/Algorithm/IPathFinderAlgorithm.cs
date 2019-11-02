@@ -5,9 +5,9 @@ using ShortestPathFinder.Common.Graph;
 namespace ShortestPathFinder.Common.Algorithm
 {
     /// <summary>
-    /// An interface for a path finder alogrithm
+    /// An interface for a path finder algorithm
     /// </summary>
-    public interface IPathFinderAlgorithm
+    public interface IPathFinderAlgorithm<T> where T : Node
     {
         /// <summary>
         /// Finds a path between the specified <param name="source">source</param>
@@ -16,7 +16,7 @@ namespace ShortestPathFinder.Common.Algorithm
         /// <param name="source">The specified source node</param>
         /// <param name="destination">The specified destination node</param>
         /// <returns>An enumeration of the nodes that leads the path between the source to the destination (included)</returns>
-        IEnumerable<Node> CalculatePath(Node source, Node destination);
+        IEnumerable<T> CalculatePath(T source, T destination);
 
         /// <summary>
         /// Asynchronously finds a path between the specified <param name="source">source</param>
@@ -25,6 +25,6 @@ namespace ShortestPathFinder.Common.Algorithm
         /// <param name="source">The specified source node</param>
         /// <param name="destination">The specified destination node</param>
         /// <returns>An enumeration of the nodes that leads the path between the source to the destination (included)</returns>
-        Task<IEnumerable<Node>> CalculatePathAsync(Node source, Node destination);
+        Task<IEnumerable<T>> CalculatePathAsync(T source, T destination);
     }
 }
