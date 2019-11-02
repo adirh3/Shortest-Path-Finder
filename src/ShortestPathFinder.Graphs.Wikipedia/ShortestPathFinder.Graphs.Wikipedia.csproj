@@ -8,4 +8,8 @@
       <ProjectReference Include="..\ShortestPathFinder.Common\ShortestPathFinder.Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
+    </ItemGroup>
+
 </Project>

@@ -43,7 +43,7 @@ namespace ShortestPathFinder
 
             // Calculate the path using the given path finder algorithm
             var foundPath = await _pathFinderAlgorithm.CalculatePathAsync(sourceNode,
-                destNode);
+                destNode).ConfigureAwait(false);
             _logger.LogInformation("Found path:");
             _logger.LogInformation(string.Join(" - ", foundPath.Select(s => s.DisplayName)));
             await StopAsync(CancellationToken.None);
