@@ -1,4 +1,4 @@
-﻿namespace ShortestPathFinder.Common
+﻿namespace ShortestPathFinder.Common.Configuration
 {
     /// <summary>
     /// Argument needed for running the shortest path finder
