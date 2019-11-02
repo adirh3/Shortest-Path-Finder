@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <RootNamespace>ShortestPathFinder.Algorithm.ParallelCrawl</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ShortestPathFinder.Common\ShortestPathFinder.Common.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="AsyncEnumerator" Version="4.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Options" Version="3.0.0" />
+    </ItemGroup>
+
+</Project>
