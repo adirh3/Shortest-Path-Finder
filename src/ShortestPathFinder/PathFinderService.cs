@@ -36,15 +36,15 @@ namespace ShortestPathFinder
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             _logger.LogInformation("PathFinder service is up");
-            
+
             // Create nodes object from the specified arguments
             var sourceNode = _nodeFactory.CreateNodeFromString(_finderArguments.Source);
             var destNode = _nodeFactory.CreateNodeFromString(_finderArguments.Destination);
-            
+
             // Calculate the path using the given path finder algorithm
             var foundPath = await _pathFinderAlgorithm.CalculatePathAsync(sourceNode,
                 destNode);
-            
+            _logger.LogInformation("Found path:");
             _logger.LogInformation(string.Join(" - ", foundPath.Select(s => s.DisplayName)));
             await StopAsync(CancellationToken.None);
         }

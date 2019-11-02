@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ShortestPathFinder.Common.Algorithm;
@@ -45,6 +46,8 @@ namespace ShortestPathFinder.Algorithms.BFS
                 $"Started BFS algorithm to find the shortest path between {source} and {destination}");
             var sourceNode = source as T;
             var destNode = destination as T;
+            if (source == null || destNode == null)
+                throw new InvalidCastException("The BFS algorithm received 2 nodes of different types");
             var queue = new Queue<T>();
             var previous = new Dictionary<T, T>();
             queue.Enqueue(sourceNode);
@@ -62,6 +65,13 @@ namespace ShortestPathFinder.Algorithms.BFS
                 var relations = _runAsync
                     ? await _relationsFinder.FindRelationsAsync(vertex)
                     : _relationsFinder.FindRelations(vertex);
+                if (relations.Contains(destNode))
+                {
+                    previous[destNode] = vertex;
+                    GetPathForResult(result, destNode, previous, sourceNode);
+                    break;
+                }
+
                 foreach (var node in relations)
                 {
                     if (previous.ContainsKey(node))
@@ -74,7 +84,7 @@ namespace ShortestPathFinder.Algorithms.BFS
             return result;
         }
 
-        private static void GetPathForResult(List<Node> result, T vertex, Dictionary<T, T> previous, T source)
+        private static void GetPathForResult(List<Node> result, T vertex, IReadOnlyDictionary<T, T> previous, T source)
         {
             // Create it's path
             result.Add(vertex);

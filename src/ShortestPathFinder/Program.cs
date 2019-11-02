@@ -12,6 +12,7 @@ using ShortestPathFinder.Common.Performance;
 using ShortestPathFinder.Graphs.Http;
 using ShortestPathFinder.Graphs.Wikipedia;
 using ShortestPathFinder.Graphs.Wikipedia.Objects;
+using ShortestPathFinder.Graphs.Wikipedia.Utils;
 using ShortestPathFinder.Logics.Performance;
 
 namespace ShortestPathFinder
@@ -22,7 +23,7 @@ namespace ShortestPathFinder
 
         private static async Task Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
+            using var host = CreateHostBuilder(args).Build();
             var logger = host.Services.GetService<ILogger>();
             try
             {
@@ -63,11 +64,12 @@ namespace ShortestPathFinder
                     services.AddSingleton<IPathFinderAlgorithm, BfsAlgorithm<HttpNode>>();
                     break;
                 case "wiki":
-                    services.AddSingleton<INodeFactory, HttpNodeFactory>();
+                    services.AddSingleton<INodeFactory, WikipediaNodeFactory>();
                     services.AddSingleton<IRelationsFinder<WikipediaNode>, WikipediaRelationsFinder>();
                     services.AddSingleton<IPathFinderAlgorithm, BfsAlgorithm<WikipediaNode>>();
                     break;
             }
+
             // Add the hosted service
             services.AddHostedService<PathFinderService>();
         }
@@ -86,8 +88,10 @@ namespace ShortestPathFinder
         /// </summary>
         private static void ConfigureLogging(HostBuilderContext context, ILoggingBuilder loggingBuilder)
         {
+            loggingBuilder.ClearProviders();
             loggingBuilder.AddConfiguration(context.Configuration);
             loggingBuilder.AddConsole();
+            loggingBuilder.AddEventLog();
         }
     }
 }

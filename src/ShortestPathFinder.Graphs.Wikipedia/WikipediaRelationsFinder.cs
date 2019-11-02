@@ -22,7 +22,7 @@ namespace ShortestPathFinder.Graphs.Wikipedia
         private string _baseUrl;
 
         public WikipediaRelationsFinder(HttpClient httpClient, IThrottler throttler,
-            WikipediaFinderConfiguration configuration,
+            WikipediaFinderConfiguration configuration = null,
             IEnumerable<INodeFilter<WikipediaNode>> nodeFilters = null)
         {
             _httpClient = httpClient;

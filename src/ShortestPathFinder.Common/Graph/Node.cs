@@ -22,7 +22,22 @@ namespace ShortestPathFinder.Common.Graph
         /// Making sure whoever use this will calculate it's hashcode
         /// </summary>
         /// <returns></returns>
-        public abstract override int GetHashCode();
+        public override int GetHashCode()
+        {
+            return (DisplayName != null ? DisplayName.GetHashCode() : 0);
+        }
+
+        private bool Equals(Node other)
+        {
+            return DisplayName == other.DisplayName;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((Node) obj);
+        }
 
         /// <summary>
         /// Returns the display name 
