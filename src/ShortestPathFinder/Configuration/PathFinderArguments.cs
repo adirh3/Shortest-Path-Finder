@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ShortestPathFinder.Configuration
+﻿namespace ShortestPathFinder.Configuration
 {
     /// <summary>
     /// Argument needed for running the shortest path finder
@@ -15,7 +13,7 @@ namespace ShortestPathFinder.Configuration
         /// <summary>
         /// The destination 
         /// </summary>
-        public string Destination { get; set; } = "P versus NP problem";
+        public string Destination { get; set; } = "Software engineering";
 
 
         /// <summary>

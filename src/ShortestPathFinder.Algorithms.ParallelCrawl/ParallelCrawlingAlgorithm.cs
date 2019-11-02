@@ -18,6 +18,7 @@ namespace ShortestPathFinder.Algorithm.ParallelCrawl
     /// <typeparam name="T">The node type</typeparam>
     public class ParallelCrawlingAlgorithm<T> : IPathFinderAlgorithm where T : Node
     {
+        private const int MaxHopsAllowed = 6;
         private readonly ILogger _logger;
         private readonly IRelationsFinder<T> _relationsFinder;
         private IList<Node> _currentResult;
@@ -97,7 +98,8 @@ namespace ShortestPathFinder.Algorithm.ParallelCrawl
             var currList = results.ToList();
             currList.Add(currNode);
 
-            if (currList.Count >= 6 || (_currentResult != null && currList.Count >= _currentResult.Count - 1) ||
+            if (currList.Count >= MaxHopsAllowed ||
+                (_currentResult != null && currList.Count >= _currentResult.Count - 1) ||
                 _nodeResults.TryGetValue(currNode, out var count) &&
                 count < currList.Count)
             {
