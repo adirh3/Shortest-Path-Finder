@@ -20,6 +20,6 @@ namespace ShortestPathFinder.Common.Graph
         /// </summary>
         /// <param name="node">The specified node</param>
         /// <returns>Enumeration of the relations of the specified node</returns>
-        Task<IEnumerable<T>> FindRelationsAsync(T node);
+        IAsyncEnumerable<T> FindRelationsAsync(T node);
     }
 }

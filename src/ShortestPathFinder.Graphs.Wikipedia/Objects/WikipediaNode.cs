@@ -1,21 +1,14 @@
 ﻿using ShortestPathFinder.Common.Graph;
 
-namespace ShortestPathFinder.Graphs.Wikipedia
+namespace ShortestPathFinder.Graphs.Wikipedia.Objects
 {
     /// <summary>
     /// Wikipedia node
     /// </summary>
     public class WikipediaNode : Node
     {
-        /// <summary>
-        /// Wikipedia article's Id
-        /// </summary>
-        public int ArticleId { get; }
-
-
-        public WikipediaNode(string articleName, int articleId) : base(articleName)
+        public WikipediaNode(string articleName) : base(articleName)
         {
-            ArticleId = articleId;
         }
 
         /// <summary>
@@ -23,7 +16,7 @@ namespace ShortestPathFinder.Graphs.Wikipedia
         /// </summary>
         public override int GetHashCode()
         {
-            return ArticleId.GetHashCode();
+            return DisplayName.GetHashCode();
         }
     }
 }

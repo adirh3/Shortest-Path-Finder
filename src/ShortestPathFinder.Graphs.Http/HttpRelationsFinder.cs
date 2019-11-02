@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Threading.Tasks;
 using ShortestPathFinder.Common.Graph;
 using ShortestPathFinder.Common.Performance;
 
@@ -39,7 +38,7 @@ namespace ShortestPathFinder.Graphs.Http
         /// </summary>
         /// <param name="node">The specified web page</param>
         /// <returns>An enumeration of all the links in the specified web page</returns>
-        public Task<IEnumerable<HttpNode>> FindRelationsAsync(HttpNode node)
+        public IAsyncEnumerable<HttpNode> FindRelationsAsync(HttpNode node)
         {
             throw new NotImplementedException();
         }

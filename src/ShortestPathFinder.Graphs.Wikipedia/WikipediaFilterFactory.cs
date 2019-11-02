@@ -1,5 +1,6 @@
 using System;
 using ShortestPathFinder.Common.Graph;
+using ShortestPathFinder.Graphs.Wikipedia.Objects;
 
 namespace ShortestPathFinder.Graphs.Wikipedia
 {
