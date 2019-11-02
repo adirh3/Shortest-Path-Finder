@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ShortestPathFinder.Algorithm.ParallelCrawl;
 using ShortestPathFinder.Algorithms.BFS;
 using ShortestPathFinder.Common.Algorithm;
 using ShortestPathFinder.Common.Graph;
@@ -66,7 +67,7 @@ namespace ShortestPathFinder
                 case "wiki":
                     services.AddSingleton<INodeFactory, WikipediaNodeFactory>();
                     services.AddSingleton<IRelationsFinder<WikipediaNode>, WikipediaRelationsFinder>();
-                    services.AddSingleton<IPathFinderAlgorithm, BfsAlgorithm<WikipediaNode>>();
+                    services.AddSingleton<IPathFinderAlgorithm, ParallelCrawlingAlgorithm<WikipediaNode>>();
                     break;
             }
 

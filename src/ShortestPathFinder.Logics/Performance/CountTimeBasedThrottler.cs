@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using ShortestPathFinder.Common.Performance;
 
 namespace ShortestPathFinder.Logics.Performance
@@ -11,11 +12,14 @@ namespace ShortestPathFinder.Logics.Performance
     /// </summary>
     public class CountTimeBasedThrottler : IThrottler
     {
+        private readonly ILogger<CountTimeBasedThrottler> _logger;
         private readonly CountTimeBasedThrottlerConfiguration _configuration;
         private readonly SemaphoreSlim _semaphore;
 
-        public CountTimeBasedThrottler(CountTimeBasedThrottlerConfiguration configuration = null)
+        public CountTimeBasedThrottler(ILogger<CountTimeBasedThrottler> logger,
+            CountTimeBasedThrottlerConfiguration configuration = null)
         {
+            _logger = logger;
             _configuration = configuration ?? new CountTimeBasedThrottlerConfiguration();
             _semaphore = new SemaphoreSlim(_configuration.MaxParallelism);
         }
@@ -28,6 +32,7 @@ namespace ShortestPathFinder.Logics.Performance
         {
             _semaphore.Wait();
             var result = function.Invoke();
+            _semaphore.Release();
             Thread.Sleep(_configuration.DelayBetweenIterations);
             return result;
         }
@@ -38,10 +43,17 @@ namespace ShortestPathFinder.Logics.Performance
         /// <param name="function">The specified async function</param>
         public async Task<T> ThrottleAsync<T>(Func<Task<T>> function)
         {
+            _logger.LogTrace("Entered throttling function");
             await _semaphore.WaitAsync();
             var result = function.Invoke();
             // Add delay after completion
-            var _ = result.ContinueWith(async t => await Task.Delay(_configuration.DelayBetweenIterations)); 
+            var _ = result.ContinueWith(async t =>
+            {
+                _semaphore.Release();
+                if (_configuration.DelayBetweenIterations != 0)
+                    await Task.Delay(_configuration.DelayBetweenIterations);
+            });
+            _logger.LogTrace("Exited throttling function");
             return await result;
         }
     }

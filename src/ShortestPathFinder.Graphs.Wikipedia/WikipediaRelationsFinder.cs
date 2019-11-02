@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using ShortestPathFinder.Common.Graph;
 using ShortestPathFinder.Common.Performance;
 using ShortestPathFinder.Graphs.Wikipedia.Objects;
@@ -16,15 +18,18 @@ namespace ShortestPathFinder.Graphs.Wikipedia
     public class WikipediaRelationsFinder : IRelationsFinder<WikipediaNode>
     {
         private const string PlContinue = "plcontinue=";
+        private readonly ILogger<WikipediaRelationsFinder> _logger;
         private readonly HttpClient _httpClient;
         private readonly IThrottler _throttler;
         private readonly IEnumerable<INodeFilter<WikipediaNode>> _nodeFilters;
         private string _baseUrl;
 
-        public WikipediaRelationsFinder(HttpClient httpClient, IThrottler throttler,
+        public WikipediaRelationsFinder(ILogger<WikipediaRelationsFinder> logger, HttpClient httpClient,
+            IThrottler throttler,
             WikipediaFinderConfiguration configuration = null,
             IEnumerable<INodeFilter<WikipediaNode>> nodeFilters = null)
         {
+            _logger = logger;
             _httpClient = httpClient;
             _throttler = throttler; // We need this throttler since we can't use Wiki API as much as we want
             configuration ??= new WikipediaFinderConfiguration();
@@ -39,12 +44,15 @@ namespace ShortestPathFinder.Graphs.Wikipedia
         /// <returns>All the referenced articles</returns>
         public IList<WikipediaNode> FindRelations(WikipediaNode node)
         {
-            WikipediaApiResult wikipediaApiResult;
+            WikipediaApiResult wikipediaApiResult = null;
             var results = new List<WikipediaNode>();
             do
             {
-                var apiResultStream = GetWikipediaLinks(node.DisplayName);
+                var apiResultStream = GetWikipediaLinks(node.DisplayName,
+                    wikipediaApiResult != null ? wikipediaApiResult.ContinueArgs : string.Empty);
                 // Parse from HTTP stream
+                if (apiResultStream == null)
+                    break;
                 wikipediaApiResult = WikipediaApiResultParser.ParseFromStream(apiResultStream);
                 EnumerateFilteredResultLinks(wikipediaApiResult, results);
             } while (wikipediaApiResult.Continue);
@@ -59,13 +67,16 @@ namespace ShortestPathFinder.Graphs.Wikipedia
         /// <returns>All the referenced articles</returns>
         public async Task<IList<WikipediaNode>> FindRelationsAsync(WikipediaNode node)
         {
-            WikipediaApiResult wikipediaApiResult;
+            WikipediaApiResult wikipediaApiResult = null;
             var results = new List<WikipediaNode>();
             do
             {
-                var getApiResultStream = GetWikipediaLinksAsync(node.DisplayName);
+                var apiResultStream = await GetWikipediaLinksAsync(node.DisplayName,
+                    wikipediaApiResult != null ? wikipediaApiResult.ContinueArgs : string.Empty);
                 // Parse from HTTP stream
-                wikipediaApiResult = await WikipediaApiResultParser.ParseFromStreamAsync(await getApiResultStream);
+                if (apiResultStream == null)
+                    break;
+                wikipediaApiResult = await WikipediaApiResultParser.ParseFromStreamAsync(apiResultStream);
                 EnumerateFilteredResultLinks(wikipediaApiResult, results);
             } while (wikipediaApiResult.Continue);
 
@@ -120,8 +131,17 @@ namespace ShortestPathFinder.Graphs.Wikipedia
         private async Task<Stream> GetWikipediaLinksAsync(string articleName, string continueArgs = "")
         {
             var getApi = CreateGetApiUrl(articleName, continueArgs);
-            var result = await _throttler.ThrottleAsync(() => _httpClient.GetStreamAsync(getApi));
-            return result;
+            try
+            {
+                var result = await _throttler.ThrottleAsync(() => _httpClient.GetStreamAsync(getApi));
+                return result;
+            }
+            catch (Exception exc)
+            {
+                _logger.LogError(exc, "Http Request failed");
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -134,7 +154,7 @@ namespace ShortestPathFinder.Graphs.Wikipedia
         {
             var getAPi = _baseUrl + articleName;
             if (continueArgs != string.Empty)
-                getAPi += PlContinue + continueArgs;
+                getAPi += "&" + PlContinue + continueArgs;
             return getAPi;
         }
     }
