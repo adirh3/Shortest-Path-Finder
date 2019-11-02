@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using ShortestPathFinder.Common.Graph;
@@ -13,10 +13,10 @@ namespace ShortestPathFinder.Graphs.Wikipedia
     public class WikipediaRelationsFinder : IRelationsFinder<WikipediaNode>
     {
         private readonly HttpClient _httpClient;
-        private readonly IThrottler<Stream> _throttler;
+        private readonly IThrottler _throttler;
         private readonly IEnumerable<INodeFilter<WikipediaNode>> _nodeFilters;
 
-        public WikipediaRelationsFinder(HttpClient httpClient, IThrottler<Stream> throttler,
+        public WikipediaRelationsFinder(HttpClient httpClient, IThrottler throttler,
             IEnumerable<INodeFilter<WikipediaNode>> nodeFilters = null)
         {
             _httpClient = httpClient;
@@ -31,7 +31,7 @@ namespace ShortestPathFinder.Graphs.Wikipedia
         /// <returns>All the referenced articles</returns>
         public IEnumerable<WikipediaNode> FindRelations(WikipediaNode node)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace ShortestPathFinder.Graphs.Wikipedia
         /// <returns>All the referenced articles</returns>
         public Task<IEnumerable<WikipediaNode>> FindRelationsAsync(WikipediaNode node)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
