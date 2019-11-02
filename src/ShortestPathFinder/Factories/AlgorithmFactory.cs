@@ -12,7 +12,7 @@ namespace ShortestPathFinder.Factories
     /// <summary>
     /// Factory to create and add the <see cref="IPathFinderAlgorithm"/> to the service collection
     /// </summary>
-    internal class AlgorithmFactory
+    internal static class AlgorithmFactory
     {
         /// <summary>
         /// Adds a <see cref="IPathFinderAlgorithm"/> to the services using the path finder arguments 
