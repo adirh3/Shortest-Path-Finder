@@ -59,7 +59,7 @@ If arguments are not passed the program will use the configuration file.
   
 ### Examples
 
-``` dotnet run -s Travelling salesman problem -d NP-hardness ```
+``` dotnet run -s "Travelling salesman problem" -d "NP-hardness" ```
 This command will find the shortest path between Travelling salesman problem and NP-hardness using Wikipedia as default and Parallel Crawling as default.
 
 ### Configuration
