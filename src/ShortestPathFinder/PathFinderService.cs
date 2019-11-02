@@ -21,12 +21,12 @@ namespace ShortestPathFinder
 
         public PathFinderService(ILogger<PathFinderService> logger,
             IPathFinderAlgorithm pathFinderAlgorithm, INodeFactory nodeFactory,
-            PathFinderArguments finderArguments = null)
+            PathFinderArguments finderArguments)
         {
             _logger = logger;
             _pathFinderAlgorithm = pathFinderAlgorithm;
             _nodeFactory = nodeFactory;
-            _finderArguments = finderArguments ?? new PathFinderArguments();
+            _finderArguments = finderArguments;
         }
 
         /// <summary>

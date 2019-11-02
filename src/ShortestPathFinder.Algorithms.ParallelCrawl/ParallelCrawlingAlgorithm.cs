@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Dasync.Collections;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using ShortestPathFinder.Common.Algorithm;
 using ShortestPathFinder.Common.Configuration;
 using ShortestPathFinder.Common.Graph;
@@ -27,13 +28,12 @@ namespace ShortestPathFinder.Algorithm.ParallelCrawl
         private readonly int _maxDegreeOfParallelism;
 
         public ParallelCrawlingAlgorithm(ILogger<ParallelCrawlingAlgorithm<T>> logger,
-            IRelationsFinder<T> relationsFinder, ParallelConfiguration parallelConfiguration = null)
+            IRelationsFinder<T> relationsFinder, IOptions<ParallelConfiguration> parallelConfiguration)
         {
             _logger = logger;
             _relationsFinder = relationsFinder;
             _nodeResults = new ConcurrentDictionary<T, int>();
-            parallelConfiguration ??= new ParallelConfiguration();
-            _maxDegreeOfParallelism = parallelConfiguration.MaxParallelism;
+            _maxDegreeOfParallelism = parallelConfiguration.Value.MaxParallelism;
         }
 
         /// <summary>
@@ -72,6 +72,12 @@ namespace ShortestPathFinder.Algorithm.ParallelCrawl
 
             // Get all relations of source
             var sourceRelations = await _relationsFinder.FindRelationsAsync(sourceNode);
+
+            if (!sourceRelations.Any())
+            {
+                _logger.LogError($"Couldn't find any relations for {sourceNode}");
+                return new List<Node>();
+            }
 
             // Check if dest is within 1 hop to reduce runtime
             if (sourceRelations.Contains(destNode))

@@ -1,19 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using ShortestPathFinder.Algorithm.ParallelCrawl;
-using ShortestPathFinder.Algorithms.BFS;
-using ShortestPathFinder.Common.Algorithm;
-using ShortestPathFinder.Common.Graph;
+using ShortestPathFinder.Common.Configuration;
 using ShortestPathFinder.Common.Performance;
-using ShortestPathFinder.Graphs.Http;
-using ShortestPathFinder.Graphs.Wikipedia;
+using ShortestPathFinder.Configuration;
+using ShortestPathFinder.Factories;
 using ShortestPathFinder.Graphs.Wikipedia.Objects;
-using ShortestPathFinder.Graphs.Wikipedia.Utils;
 using ShortestPathFinder.Logics.Performance;
 
 namespace ShortestPathFinder
@@ -21,6 +18,8 @@ namespace ShortestPathFinder
     internal static class Program
     {
         private const string AppSettingsJson = "appsettings.json";
+        private const string WikipediaConfigSection = "Wikipedia";
+        private const string ConfigSection = "Parallel";
 
         private static async Task Main(string[] args)
         {
@@ -43,37 +42,44 @@ namespace ShortestPathFinder
             Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(ConfigureAppConfig)
                 .ConfigureLogging(ConfigureLogging)
-                .ConfigureServices(ConfigureServices)
+                .ConfigureServices((context, collection) => ConfigureServices(context, collection, args))
                 .UseConsoleLifetime();
 
         /// <summary>
         /// Configure the services of the host
         /// </summary>
-        private static void ConfigureServices(HostBuilderContext hostContext, IServiceCollection services)
+        private static void ConfigureServices(HostBuilderContext hostContext, IServiceCollection services,
+            IEnumerable<string> args)
         {
+            #region Configuration Services
+
+            var pathFinderArguments =
+                PathFinderArgumentParser.ParsePathFinderArguments(hostContext.Configuration, args);
+
+            services.AddSingleton(pathFinderArguments);
+            services.Configure<WikipediaFinderConfiguration>(hostContext.Configuration.GetSection(WikipediaConfigSection));
+            services.Configure<ParallelConfiguration>(hostContext.Configuration.GetSection(ConfigSection));
+            services.Configure<CountTimeBasedThrottlerConfiguration>(hostContext.Configuration.GetSection(ConfigSection));
+
+            #endregion
+
+            // Configure logging
             services.AddLogging();
             services.AddSingleton<HttpClient>();
 
             services.AddSingleton<IThrottler, CountTimeBasedThrottler>();
 
-            var nodeType = "wiki";
-            switch (nodeType)
-            {
-                case "http":
-                    services.AddSingleton<INodeFactory, HttpNodeFactory>();
-                    services.AddSingleton<IRelationsFinder<HttpNode>, HttpRelationsFinder>();
-                    services.AddSingleton<IPathFinderAlgorithm, BfsAlgorithm<HttpNode>>();
-                    break;
-                case "wiki":
-                    services.AddSingleton<INodeFactory, WikipediaNodeFactory>();
-                    services.AddSingleton<IRelationsFinder<WikipediaNode>, WikipediaRelationsFinder>();
-                    services.AddSingleton<IPathFinderAlgorithm, ParallelCrawlingAlgorithm<WikipediaNode>>();
-                    break;
-            }
+
+            // Add the necessary graph related services
+            RelationFinderFactory.AddRelationFinder(services, pathFinderArguments);
+
+            // Add the necessary algorithm service
+            AlgorithmFactory.AddRelationFinder(services, pathFinderArguments);
 
             // Add the hosted service
             services.AddHostedService<PathFinderService>();
         }
+
 
         /// <summary>
         /// Configures the app settings of the host
