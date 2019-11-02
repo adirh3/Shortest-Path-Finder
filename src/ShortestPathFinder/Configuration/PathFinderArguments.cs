@@ -1,4 +1,6 @@
-﻿namespace ShortestPathFinder.Configuration
+﻿using CommandLine;
+
+namespace ShortestPathFinder.Configuration
 {
     /// <summary>
     /// Argument needed for running the shortest path finder
@@ -8,27 +10,27 @@
         /// <summary>
         /// The source of the path, the crawling will start from it
         /// </summary>
-        public string Source { get; set; } = "Travelling salesman problem";
+        [Option('s', "source", Required = false, HelpText = "The source node")]
+        public string Source { get; set; }
 
         /// <summary>
         /// The destination 
         /// </summary>
-        public string Destination { get; set; } = "Software engineering";
+        [Option('d', "destination", Required = false, HelpText = "The destination node")]
+        public string Destination { get; set; }
 
+        /// <summary>
+        /// The relation finders
+        /// </summary>
+        [Option('f', "finder", MetaValue = "0", Required = false,
+            HelpText = "The relation finder, 0 - Wikipedia, 1 - Http")]
+        public SupportedGraphs RelationFinder { get; set; } = SupportedGraphs.Unknown;
 
         /// <summary>
         /// The specified algorithm to run the short path
         /// </summary>
-        public string Algorithm { get; set; }
-
-        public PathFinderArguments()
-        {
-        }
-
-        /// <summary>
-        /// Creates an object to represents the running args
-        /// </summary>
-        public PathFinderArguments(string source, string destination, string algorithm)
-            => (Source, Destination, Algorithm) = (source, destination, algorithm);
+        [Option('a', "algorithm", MetaValue = "0", Required = false,
+            HelpText = "The path finder algorithm, 0 - Parallel Crawling, 1 - BFS")]
+        public SupportedAlgorithm Algorithm { get; set; } = SupportedAlgorithm.Unknown;
     }
 }

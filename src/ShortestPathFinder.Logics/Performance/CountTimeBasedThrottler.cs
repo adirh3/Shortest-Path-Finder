@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using ShortestPathFinder.Common.Performance;
 
 namespace ShortestPathFinder.Logics.Performance
@@ -17,10 +18,10 @@ namespace ShortestPathFinder.Logics.Performance
         private readonly SemaphoreSlim _semaphore;
 
         public CountTimeBasedThrottler(ILogger<CountTimeBasedThrottler> logger,
-            CountTimeBasedThrottlerConfiguration configuration = null)
+            IOptions<CountTimeBasedThrottlerConfiguration> configuration)
         {
             _logger = logger;
-            _configuration = configuration ?? new CountTimeBasedThrottlerConfiguration();
+            _configuration = configuration.Value;
             _semaphore = new SemaphoreSlim(_configuration.MaxParallelism);
         }
 

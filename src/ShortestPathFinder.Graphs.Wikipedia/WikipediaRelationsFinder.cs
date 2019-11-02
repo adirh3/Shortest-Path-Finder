@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using ShortestPathFinder.Common.Graph;
 using ShortestPathFinder.Common.Performance;
 using ShortestPathFinder.Graphs.Wikipedia.Objects;
@@ -26,15 +27,14 @@ namespace ShortestPathFinder.Graphs.Wikipedia
 
         public WikipediaRelationsFinder(ILogger<WikipediaRelationsFinder> logger, HttpClient httpClient,
             IThrottler throttler,
-            WikipediaFinderConfiguration configuration = null,
+            IOptions<WikipediaFinderConfiguration> configuration,
             IEnumerable<INodeFilter<WikipediaNode>> nodeFilters = null)
         {
             _logger = logger;
             _httpClient = httpClient;
             _throttler = throttler; // We need this throttler since we can't use Wiki API as much as we want
-            configuration ??= new WikipediaFinderConfiguration();
             _nodeFilters = nodeFilters ?? new List<INodeFilter<WikipediaNode>>();
-            InitiateBaseUrl(configuration);
+            InitiateBaseUrl(configuration.Value);
         }
 
         /// <summary>
