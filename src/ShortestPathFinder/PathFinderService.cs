@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,7 +55,8 @@ namespace ShortestPathFinder
         /// </summary>
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Stop");
+            _logger.LogInformation("The service finished running");
+            Environment.Exit(-1);
         }
     }
 }
