@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using ShortestPathFinder.Common.Algorithm;
 using ShortestPathFinder.Common.Graph;
 
@@ -10,12 +11,14 @@ namespace ShortestPathFinder.Algorithm.ParallelCrawl
     /// Finds the <b>shortest</b> path between the source and destination by crawling in parallel
     /// </summary>
     /// <typeparam name="T">The node type</typeparam>
-    public class ParallelCrawlingAlgorithm<T> : IPathFinderAlgorithm<T> where T : Node
+    public class ParallelCrawlingAlgorithm<T> : IPathFinderAlgorithm where T:Node
     {
+        private readonly ILogger _logger;
         private readonly IRelationsFinder<T> _relationsFinder;
 
-        public ParallelCrawlingAlgorithm(IRelationsFinder<T> relationsFinder)
+        public ParallelCrawlingAlgorithm(ILogger logger, IRelationsFinder<T> relationsFinder)
         {
+            _logger = logger;
             _relationsFinder = relationsFinder;
         }
 
@@ -25,7 +28,7 @@ namespace ShortestPathFinder.Algorithm.ParallelCrawl
         /// <param name="source">The source node</param>
         /// <param name="destination">The destination node</param>
         /// <returns>An enumeration of the <b>shortest</b> path between the source and the destination</returns>
-        public IEnumerable<T> CalculatePath(T source, T destination)
+        public IEnumerable<Node> CalculatePath(Node source, Node destination)
         {
             throw new NotImplementedException();
         }
@@ -36,7 +39,7 @@ namespace ShortestPathFinder.Algorithm.ParallelCrawl
         /// <param name="source">The source node</param>
         /// <param name="destination">The destination node</param>
         /// <returns>An enumeration of the <b>shortest</b> path between the source and the destination</returns>
-        public Task<IEnumerable<T>> CalculatePathAsync(T source, T destination)
+        public Task<IEnumerable<Node>> CalculatePathAsync(Node source, Node destination)
         {
             throw new NotImplementedException();
         }

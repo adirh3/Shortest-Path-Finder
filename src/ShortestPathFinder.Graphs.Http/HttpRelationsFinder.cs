@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using ShortestPathFinder.Common.Graph;
@@ -13,10 +13,10 @@ namespace ShortestPathFinder.Graphs.Http
     public class HttpRelationsFinder : IRelationsFinder<HttpNode>
     {
         private readonly HttpClient _httpClient;
-        private readonly IThrottler<Stream> _throttler;
+        private readonly IThrottler _throttler;
         private readonly IEnumerable<INodeFilter<HttpNode>> _nodeFilters;
 
-        public HttpRelationsFinder(HttpClient httpClient, IThrottler<Stream> throttler,
+        public HttpRelationsFinder(HttpClient httpClient, IThrottler throttler,
             IEnumerable<INodeFilter<HttpNode>> nodeFilters = null)
         {
             _httpClient = httpClient;
@@ -31,7 +31,7 @@ namespace ShortestPathFinder.Graphs.Http
         /// <returns>An enumeration of all the links in the specified web page</returns>
         public IEnumerable<HttpNode> FindRelations(HttpNode node)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace ShortestPathFinder.Graphs.Http
         /// <returns>An enumeration of all the links in the specified web page</returns>
         public Task<IEnumerable<HttpNode>> FindRelationsAsync(HttpNode node)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

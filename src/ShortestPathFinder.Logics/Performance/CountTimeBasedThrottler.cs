@@ -4,11 +4,11 @@ using ShortestPathFinder.Common.Performance;
 
 namespace ShortestPathFinder.Logics.Performance
 {
-    /// <inheritdoc cref="IThrottler{T}"/>
+    /// <inheritdoc cref="IThrottler"/>
     /// <summary>
     /// This throttler will throttle cpu usage by reducing threads to the specified count and delay operations by time
     /// </summary>
-    public class CountTimeBasedThrottler<T> : IThrottler<T>
+    public class CountTimeBasedThrottler : IThrottler
     {
         private readonly CountTimeBasedThrottlerConfiguration _configuration;
 
@@ -17,12 +17,12 @@ namespace ShortestPathFinder.Logics.Performance
             _configuration = configuration ?? new CountTimeBasedThrottlerConfiguration();
         }
 
-        public T Throttle(Func<T> function)
+        public T Throttle<T>(Func<T> function)
         {
             throw new NotImplementedException();
         }
 
-        public T ThrottleAsync(Func<Task<T>> function)
+        public Task<T> ThrottleAsync<T>(Func<Task<T>> function)
         {
             throw new NotImplementedException();
         }
