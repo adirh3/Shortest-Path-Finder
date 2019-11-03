@@ -62,6 +62,8 @@ If arguments are not passed the program will use the configuration file.
 ``` dotnet run -s "Travelling salesman problem" -d "NP-hardness" ```
 This command will find the shortest path between Travelling salesman problem and NP-hardness using Wikipedia as default and Parallel Crawling as default.
 
+*Note* - if you use the Wikipedia node insert the full title (as shown in their website)
+
 ### Configuration
 
 You can access more configuration through the `appsettings.json` file.
